@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<H1>Your Final Score is %{{scr}}</H1>
+<p></p>
+<h2>{{message}}</h2>
+<p></p>
+<p></p>
+{% if corrected_ans %}
+<h2>Questions to review:</h2>
+{% for ans in corrected_ans %}
+    <h5>Question: {{ans[0]}}</h5>
+    <h6>Answer: {{ans[1]}}</h6>
+    <p></p>
+{% endfor %}
+{% endif %}
+{% endblock %}

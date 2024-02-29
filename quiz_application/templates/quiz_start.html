@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Welcome to the DMV simulation test</h1>
+<p></p>
+<form action="{{ url_for('submit_answers')}}" method="post">
+    <ul>
+        {% for e,n in zipped %}
+        <h3>{{e}}. {{data[n]['question']}}</h3>
+        <input type="radio" id="{{n}}A" name="{{data[n]['question']}}" value="{{data[n]['answers'][0]}}">
+        <label for="{{n}}A">{{data[n]['answers'][0]}}</label>
+        <p></p>
+        <input type="radio" id="{{n}}B" name="{{data[n]['question']}}" value="{{data[n]['answers'][1]}}">
+        <label for="{{n}}B">{{data[n]['answers'][1]}}</label>
+        <p></p>
+        <input type="radio" id="{{n}}C" name="{{data[n]['question']}}" value="{{data[n]['answers'][2]}}">
+        <label for="{{n}}C">{{data[n]['answers'][2]}}</label>
+        <p></p>
+        {% endfor %}
+    </ul>
+    <button type="submit">Submit Answers</button>
+</form>
+{% endblock %}
