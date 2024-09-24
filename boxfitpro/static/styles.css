@@ -1,0 +1,78 @@
+/* static/styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    margin-top: 20px;
+}
+
+button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Style the navbar */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+}
+
+/* Remove bullets and make list items inline */
+.navbar-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Align list items horizontally */
+.navbar-list li {
+    display: inline;
+    margin-right: 20px; /* Space between tabs */
+}
+
+/* Style the links inside the navbar */
+.navbar-list a {
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Change the color of links on hover */
+.navbar-list a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
+
