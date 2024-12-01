@@ -18,18 +18,19 @@ class Vehicle(Base):
     model = Column(String)
     vin_number = Column(String)
     miles = Column(Integer)
-
+    image_path = Column(String)
 # Create table in the database
 Base.metadata.create_all(engine)
 
 # Function to add a new vehicle record
-def add_vehicle(year, make, model, vin_number, miles):
+def add_vehicle(year, make, model, vin_number, miles, image_path=None):
     Session = sessionmaker(bind=engine)
     session = Session()
-    vehicle = Vehicle(year=year, make=make, model=model, vin_number=vin_number, miles=miles)
+    vehicle = Vehicle(year=year, make=make, model=model, vin_number=vin_number, miles=miles,image_path=image_path)
     session.add(vehicle)
     session.commit()
     session.close()
+    
 
 # Function to update an existing vehicle record
 def update_vehicle(vehicle_id, year=None, make=None, model=None, vin_number=None, miles=None):
