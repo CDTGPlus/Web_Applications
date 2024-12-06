@@ -5,9 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from auto_data import *
 import os
-
-
-
+import io
 
 # Create SQLite database engine
 engine = create_engine('sqlite:///vehicles.db', echo=True)
@@ -22,6 +20,40 @@ def fetch_all_vehicle_data():
     vehicles = session.query(Vehicle).all()
     session.close()
     return vehicles
+
+# Function to fetch vehicle data as a csv file
+def fetch_vehicle_data_as_dataframe():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    vehicles = session.query(Vehicle).all()
+    session.close()
+
+    # Convert vehicle data to a DataFrame, excluding the image field
+    data = [
+        {
+            "ID": vehicle.id,
+            "Year": vehicle.year,
+            "Make": vehicle.make,
+            "Model": vehicle.model,
+            "VIN Number": vehicle.vin_number,
+            "Miles": vehicle.miles
+        }
+        for vehicle in vehicles
+    ]
+    return pd.DataFrame(data)
+
+# Functions to handle images
+def delete_vehicle_image(vehicle_id):
+    image_path = f"images/{vehicle_id}.jpg"  # Adjust the path and format as needed
+    if os.path.exists(image_path):
+        os.remove(image_path)
+    else:
+        raise FileNotFoundError("Image file does not exist.")
+    
+def save_vehicle_image(vehicle_id, image_file):
+    image_path = f"images/{vehicle_id}.jpg"  # Ensure consistent path
+    with open(image_path, 'wb') as f:
+        f.write(image_file.getbuffer()) 
 
 # Function to display vehicle data
 def display_vehicle_data(fetch):
@@ -106,8 +138,23 @@ def main():
 
         if option == 'View All':
             st.subheader('View Vehicle Data')
+            df = fetch_vehicle_data_as_dataframe()
+            if not df.empty:
+                # Convert DataFrame to CSV
+                csv_buffer = io.StringIO()
+                df.to_csv(csv_buffer, index=False)
+                csv_data = csv_buffer.getvalue()
+
+                # Add download button
+                st.download_button(
+                    label="Download Vehicle Data as CSV",
+                    data=csv_data,
+                    file_name="vehicle_data.csv",
+                    mime="text/csv"
+                )
             display_vehicle_data(fetch_all_vehicle_data())
 
+            
 
         elif option == 'Search':
             # Search criteria inputs
@@ -146,12 +193,11 @@ def main():
 
         elif option == 'Edit':
             vehicle_id = st.text_input('Enter Vehicle ID')       
-                    
+                
             vehicle = select_vehicle(int(vehicle_id)) if vehicle_id else None
 
             # Display vehicle attributes in input fields
             if vehicle:
-                
                 st.subheader('Current Vehicle Data')
                 st.write(f'ID: {vehicle.id}')
                 year = st.text_input('Year', value=str(vehicle.year))
@@ -160,26 +206,45 @@ def main():
                 vin_number = st.text_input('VIN Number', value=vehicle.vin_number)
                 miles = st.text_input('Miles', value=str(vehicle.miles))
 
+                # Display the current image, if available
+                image_path = get_image_path(vehicle.id)
+                if image_path:
+                    st.image(image_path, caption=f"Current Image for Vehicle ID {vehicle.id}", use_container_width=True)
+                else:
+                    st.warning("No image available for this vehicle.")
+
+                # Option to upload a new image
+                st.subheader("Update Image")
+                new_image = st.file_uploader("Upload a new image (optional)", type=["jpg", "jpeg", "png"])
+
+                # Option to delete the current image
+                delete_image = st.checkbox("Delete current image")
+
+                # Confirm changes button
                 confirm_update = st.button('Confirm Update')
 
                 if confirm_update:
+                    # Save the new image to the 'images' directory if provided
+                    new_image_path = None
+                    if new_image:
+                        new_image_path = f"images/{vehicle.id}.jpg"
+                        with open(new_image_path, "wb") as f:
+                            f.write(new_image.read())
 
-                    update_vehicle(int(vehicle_id), year, make, model, vin_number, miles)
+                    # Update the vehicle in the database
+                    update_vehicle(
+                        int(vehicle_id),
+                        year=year,
+                        make=make,
+                        model=model,
+                        vin_number=vin_number,
+                        miles=miles,
+                        image_path=new_image_path if not delete_image else None,
+                        delete_image=delete_image
+                    )
+                    
                     st.success('Vehicle updated successfully.')
-                    # st.experimental_rerun()
-            else:
-                st.warning('Vehicle not found. Please enter a valid Vehicle ID.')
-                    
-                    
-        elif option == 'Delete':
-            vehicle_id_del = st.text_input('Enter Vehicle ID')
-            vehicle = select_vehicle(int(vehicle_id_del)) if vehicle_id_del else None
-            if vehicle:
-                confirm_deletion = st.button('Confirm Deletion')
-                if confirm_deletion:
-                    delete_vehicle(int(vehicle_id_del))
-                    st.success('Vehicle deleted successfully.')
-                    # st.experimental_rerun()
+                    st.rerun()  # Refresh the app to reflect changes
             else:
                 st.warning('Vehicle not found. Please enter a valid Vehicle ID.')
 #run main

@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
 
 # Create SQLite database engine
 engine = create_engine('sqlite:///vehicles.db', echo=True)
@@ -33,11 +34,13 @@ def add_vehicle(year, make, model, vin_number, miles, image_path=None):
     
 
 # Function to update an existing vehicle record
-def update_vehicle(vehicle_id, year=None, make=None, model=None, vin_number=None, miles=None):
+def update_vehicle(vehicle_id, year=None, make=None, model=None, vin_number=None, miles=None,image_path=None, delete_image=False):
     Session = sessionmaker(bind=engine)
     session = Session()
     vehicle = session.query(Vehicle).filter_by(id=vehicle_id).first()
+    
     if vehicle:
+        # Update vehicle fields
         if year:
             vehicle.year = year
         if make:
@@ -48,7 +51,19 @@ def update_vehicle(vehicle_id, year=None, make=None, model=None, vin_number=None
             vehicle.vin_number = vin_number
         if miles:
             vehicle.miles = miles
+
+        # Handle image updates
+        if delete_image:  # If delete_image flag is set
+            current_image_path = f"images/{vehicle.id}.jpg"
+            if os.path.exists(current_image_path):  # Check if the image file exists
+                os.remove(current_image_path)  # Delete the file
+            vehicle.image_path = None  # Update database to reflect no image
+
+        elif image_path:
+            vehicle.image_path = image_path  # Update with the new image path
+
         session.commit()
+    
     session.close()
 
 # Function to delete a vehicle record
