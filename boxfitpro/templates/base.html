@@ -5,17 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BoxFitPro</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    
 </head>
 <body>
     <nav class="navbar">
         <ul class="navbar-list">
             <li><a href="/">Home</a></li>
             <li><a href="/box-sizes">Box Sizes</a></li>
+            {% if 'username' in session %}
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            {% else %}
+                <li><a href="/signup">Sign Up</a></li>
+                <li><a href="/login">Login</a></li>
+            {% endif %}
         </ul>
     </nav>
+
+    <!-- Flash Messages for Success/Error Notifications -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
     <div class="content">
         {% block content %}{% endblock %}
     </div>
+
+    <footer>
+        <p>&copy; {{ current_year }} BoxFitPro. All Rights Reserved.</p>
+    </footer>
 </body>
 </html>

@@ -1,38 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Available Box Sizes</h1>
-<table border="1">
+<h1>Your Boxes</h1>
+<a href="/add-box">Add New Box</a>
+<br><br>
+<table>
     <tr>
-        <th>Length </th>
-        <th>Width </th>
-        <th>Height </th>
+        <th>Length</th>
+        <th>Width</th>
+        <th>Height</th>
+        <th>Actions</th>
     </tr>
     {% for box in boxes %}
     <tr>
-        <td>{{ box[1] }}</td>
         <td>{{ box[2] }}</td>
         <td>{{ box[3] }}</td>
+        <td>{{ box[4] }}</td>
         <td>
-            <!-- Delete button, sends a POST request to /delete-box -->
-            <form action="/delete-box" method="POST" style="display:inline;">
-                <input type="hidden" name="id" value="{{ box['id'] }}">
+            <a href="/edit-box/{{ box[0] }}">Edit</a> |
+            <form action="/delete-box/{{ box[0] }}" method="POST" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     {% endfor %}
 </table>
-<br><br>
-<h3>Add New Box Size</h3>
-<form action="/add-box" method="POST">
-    <label for="length">Length:</label>
-    <input type="number" id="length" name="length" required><br><br>
-    <label for="width">Width:</label>
-    <input type="number" id="width" name="width" required><br><br>
-    <label for="height">Height:</label>
-    <input type="number" id="height" name="height" required><br><br>
-    <br>
-    <button type="submit">Add Box</button>
-</form>
+
+
 {% endblock %}
+

@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>BoxFitPro Recommendation</h1>
+<h1>Box Recommendation</h1>
+
 {% if box == 'No box fits' %}
     <p>Unfortunately, we do not have a box that fits your item's dimensions.</p>
+    
+    {% if closest_box %}
+        <p>The closest box available is: 
+        {{ closest_box[0] }} x {{ closest_box[1] }} x {{ closest_box[2] }}</p>
+    {% endif %}
 {% else %}
     <p>We recommend a box with dimensions: {{ box[0] }} x {{ box[1] }} x {{ box[2] }}</p>
 {% endif %}
+
 <a href="/">Go back</a>
 {% endblock %}
+

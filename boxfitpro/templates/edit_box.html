@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Edit Box</h1>
+<form method="POST" action="/edit-box">
+    <label for="length">Length:</label>
+    <input type="number" name="length" value="{{ box['length'] }}" required><br>
+
+    <label for="width">Width:</label>
+    <input type="number" name="width" value="{{ box['width'] }}" required><br>
+
+    <label for="height">Height:</label>
+    <input type="number" name="height" value="{{ box['height'] }}" required><br>
+
+    <button type="submit">Update Box</button>
+</form>
+{% endblock %}
+
+
+
