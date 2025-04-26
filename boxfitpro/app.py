@@ -5,7 +5,7 @@ from box_fit import box_it
 from box_sizes_data import *
 
 app = Flask(__name__, static_folder='static')
-app.secret_key = 'supersecretkey'
+app.secret_key = 'USERDETERMINEDKEY'
 
 # Database connection function
 def get_db_connection():
