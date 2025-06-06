@@ -100,9 +100,12 @@ def find_box():
     boxes = get_user_boxes(user['id'])
 
     available_boxes = [(box[2], box[3], box[4]) for box in boxes]
-    recommended_box, closest_box = box_it(item_dims, available_boxes)
-
-    return render_template('result.html', box=recommended_box, closest_box=closest_box)
+    recommended_boxes, closest_box = box_it(item_dims, available_boxes)
+    print("Recommended Boxes:", recommended_boxes)
+    if type(recommended_boxes) != str:
+        if len(recommended_boxes ) > 2:
+            recommended_boxes = recommended_boxes[:3]
+    return render_template('result.html', box=recommended_boxes, closest_box=closest_box)
 
 @app.route('/add-box', methods=['GET', 'POST'])
 def add_box_route():

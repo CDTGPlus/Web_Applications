@@ -11,9 +11,15 @@
         {{ closest_box[0] }} x {{ closest_box[1] }} x {{ closest_box[2] }}</p>
     {% endif %}
 {% else %}
-    <p>We recommend a box with dimensions: {{ box[0] }} x {{ box[1] }} x {{ box[2] }}</p>
+    <p>We recommend a box with dimensions: {{ box[0][0] }} x {{ box[0][1] }} x {{ box[0][2] }}</p>
+    <p></p>
+    <p>Alternative options:</p>
+    {% if box|length > 1 %}
+        {% for b in box[1:] %}
+            <p>{{ b[0] }} x {{ b[1] }} x {{ b[2] }}</p>
+        {% endfor %}
+    {% endif %}
 {% endif %}
 
 <a href="/">Go back</a>
 {% endblock %}
-

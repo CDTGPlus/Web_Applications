@@ -1,8 +1,10 @@
 from itertools import permutations
 
+def sort_boxes(boxes):
+    return sorted(boxes, key=lambda box: (box[0], box[1], box[2]))
+
 def box_it(dims, boxes):
     res = []
-    alpha = float('inf')
     closest_box = None
     min_deficit = float('inf')
 
@@ -22,9 +24,7 @@ def box_it(dims, boxes):
         )
 
         if fits:
-            if box_volume < alpha:
-                alpha = box_volume
-                res = x
+            res.append(x)
         else:
             # Calculate the volume deficit for closest box logic
             deficit = item_volume - box_volume
@@ -34,8 +34,8 @@ def box_it(dims, boxes):
 
     if len(res) == 0:
         return 'No box fits', closest_box
+    res = sort_boxes(res)
     return res, None
-
 
 # Sample list of boxes (length, width, height)
 # available_boxes = [
