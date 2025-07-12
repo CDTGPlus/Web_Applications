@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Edit Box</h1>
-<form method="POST" action="/edit-box">
+<form method="POST" action="/edit-box/{{ box['id'] }}">
     <label for="length">Length:</label>
     <input type="number" name="length" value="{{ box['length'] }}" required><br>
 

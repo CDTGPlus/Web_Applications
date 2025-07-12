@@ -48,8 +48,10 @@ def add_user(account_name, email, username, password):
     cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
     existing_user = cursor.fetchone()
 
+    # Signal to caller that username is taken
     if existing_user:
-        username = generate_random_username(username)
+        conn.close()
+        return None
 
     # Add the user to the database
     cursor.execute('INSERT INTO users (account_name, email, username, password) VALUES (?, ?, ?, ?)', 

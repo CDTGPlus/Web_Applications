@@ -35,6 +35,9 @@ def signup():
         password = request.form['password']
 
         new_username = add_user(account_name, email, username, password)
+        if new_username is None:
+            flash('Username is already in use. Please choose a different username.', 'error')
+            return render_template('signup.html', account_name=account_name, email=email)
         session['username'] = new_username
         return redirect(url_for('profile'))
 
